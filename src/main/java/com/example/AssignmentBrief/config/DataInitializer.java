@@ -7,6 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.InputStream;
@@ -16,13 +20,15 @@ import java.util.List;
 @Configuration
 public class DataInitializer {
 
-    private static final String GOLD_PRICE_API_URL = "https://api.example.com/gold-price";
+    private static final String GOLD_PRICE_API_URL = "https://www.goldapi.io/api/XAU/USD";
+    private static final String API_KEY = "goldapi-1jlsbk17mct6tn2c-io";
 
     @Bean
     CommandLineRunner runner(productRepository productRepository) {
         return args -> {
             ObjectMapper mapper = new ObjectMapper();
-            TypeReference<List<product>> typeReference = new TypeReference<>() {};
+            TypeReference<List<product>> typeReference = new TypeReference<>() {
+            };
             InputStream inputStream = TypeReference.class.getResourceAsStream("/products.json");
 
             if (inputStream != null) {
@@ -52,16 +58,28 @@ public class DataInitializer {
     private BigDecimal fetchGoldPrice() {
         try {
             RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("x-access-token", API_KEY);
+            headers.set("Content-Type", "application/json");
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
             String url = GOLD_PRICE_API_URL;
-            record GoldPriceResponse(BigDecimal price) {}
+            record GoldPriceResponse(BigDecimal price) {
+            }
 
-            GoldPriceResponse response = restTemplate.getForObject(url, GoldPriceResponse.class);
-            return response != null ? response.price() : null;
+            ResponseEntity<GoldPriceResponse> response = restTemplate.exchange(
+                    GOLD_PRICE_API_URL,
+                    HttpMethod.GET,
+                    entity,
+                    GoldPriceResponse.class
+            );
+
+            return response.getBody() != null ? response.getBody().price() : null;
 
         } catch (Exception e) {
             System.err.println("Failed to fetch gold price: " + e.getMessage());
             return null;
         }
     }
+
 }
