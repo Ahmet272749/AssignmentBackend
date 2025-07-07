@@ -41,7 +41,7 @@ public class DataInitializer {
                 }
 
                 for (product p : products) {
-                    BigDecimal popularity = BigDecimal.valueOf(p.getPopularityScore() + 1);
+                    BigDecimal popularity = p.getPopularityScore().add(BigDecimal.ONE);
                     BigDecimal weight = BigDecimal.valueOf(p.getWeight());
                     BigDecimal price = popularity.multiply(weight).multiply(goldPrice);
                     p.setPrice(price);

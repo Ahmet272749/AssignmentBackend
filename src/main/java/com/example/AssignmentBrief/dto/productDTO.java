@@ -6,7 +6,7 @@ import java.util.Map;
 public record productDTO (
         String id,
         String name,
-        int popularityScore,
+        BigDecimal popularityScore,
         int weight,
         BigDecimal price,
         Map<String, String> images

@@ -19,7 +19,7 @@ public class product {
     private String name;
 
     @Column(nullable = false)
-    private int popularityScore;
+    private BigDecimal popularityScore;
 
     @Column(nullable = false)
     private int weight;
@@ -33,7 +33,7 @@ public class product {
     @Column(name = "images")
     private Map<String, String> images = new HashMap<>();
 
-    public product(String id, BigDecimal price,Map<String, String> images, int weight, int popularityScore, String name) {
+    public product(String id, BigDecimal price,Map<String, String> images, int weight, BigDecimal popularityScore, String name) {
         this.id = id;
         this.price = price;
         this.images = images;
@@ -54,7 +54,7 @@ public class product {
         return weight;
     }
 
-    public int getPopularityScore() {
+    public BigDecimal getPopularityScore() {
         return popularityScore;
     }
 
