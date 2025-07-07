@@ -66,6 +66,10 @@ public class product {
         return id;
     }
 
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     public Map<String, String> getImages() {
         return images;
     }
