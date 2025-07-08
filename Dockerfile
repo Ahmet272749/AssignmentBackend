@@ -1,5 +1,5 @@
 
-FROM maven:3.9.3-jdk-21 AS build
+FROM eclipse-temurin:21-jdk-alpine
 
 WORKDIR /app
 COPY pom.xml .
